@@ -7,6 +7,7 @@ import { toast } from "react-hot-toast";
 const AddPost = () => {
   const [title, setTitle] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
+  const queryClient = useQueryClient();
 
   let toastPostID: string;
 
@@ -21,6 +22,8 @@ const AddPost = () => {
         setIsDisabled(false);
       },
       onSuccess: (data) => {
+        // automatically refetch the new post that has been made
+        queryClient.invalidateQueries(["posts"]);
         toast.success("Post has been made 🔥", { id: toastPostID });
         setTitle("");
         setIsDisabled(false);
@@ -30,8 +33,9 @@ const AddPost = () => {
 
   const submitPost = async (e: React.FormEvent) => {
     e.preventDefault();
-    toastPostID = toast.loading("Creating your post", { id: toastPostID });
     setIsDisabled(true);
+    toastPostID = toast.loading("Creating your post", { id: toastPostID });
+    setTimeout(() => toast.dismiss(toastPostID), 2000);
     mutate(title);
   };
   return (

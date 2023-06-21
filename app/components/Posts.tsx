@@ -9,7 +9,11 @@ type postsProps = {
   name: string;
   postTitle: string;
   id: string;
-  comments: string;
+  comments: {
+    id: string;
+    postId: string;
+    userId: string;
+  }[];
 };
 
 const Posts = ({ avatar, name, postTitle, id, comments }: postsProps) => {
